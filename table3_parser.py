@@ -20,8 +20,8 @@ URLS = {
 }
 
 URLS_104 = {
-	1 : "http://uscodebeta.house.gov/classification/tbl%spl_1st.htm"
-}
+	1 : "http://uscodebeta.house.gov/classification/tbl%spl.htm"
+}		
 
 
 ##PARSER
@@ -43,15 +43,8 @@ EXPRESSIONS = {
 }
 	
 LINE_TYPES = {
-	'normal_line': re.compile(r"{usc_title}[ ]*{usc_section}[ ]*({description})?[ ]*{public_law_number}[ ]({public_law_section})[ ]*{statutes_at_large_section}[ ]+{statutes_at_large_volume}".format(**EXPRESSIONS)),
-	'additional_description_line': re.compile(r"^[ ]{5,1000}.+$"),
+	'normal_line': re.compile(r"{usc_title}[ ]*{usc_section}[ ]*({description})?[ ]*{public_law_number}[ ]({public_law_section})[ ]*{statutes_at_large_section}[ ]+{statutes_at_large_volume}".format(**EXPRESSIONS))
 }
-
-
-def classify(line):
-    return dict([
-        (type, expr.match(line))
-    for type, expr in LINE_TYPES.items()])
 
 
 usc_title = None
@@ -59,12 +52,18 @@ usc_section = None
 public_law_number = None
 public_law_section = None
 statutes_at_large_section = None
-additional_counter = 0
 
 line_data = {}
 listout = []
 
 HARD_CODED_LINES = json.load(open("hard_coded_lines.json"))
+
+
+def classify(line):
+    return dict([
+        (type, expr.match(line))
+    for type, expr in LINE_TYPES.items()])
+
 
 def parse_line(line):
 	classified = classify(line)
@@ -96,9 +95,9 @@ def parse_line(line):
        
 	elif line in HARD_CODED_LINES:
 			return HARD_CODED_LINES[line]
-	
+
 	else:
-		return None
+		print "This is a problem line...", line
 
 
 if __name__ == "__main__":
@@ -112,14 +111,36 @@ if __name__ == "__main__":
 		page_content = connection.read()
 		page = etree.parse(StringIO.StringIO(page_content), html_parser)
 
-		if congress_session == '105':
-			# do something totally different
-			pass
-		else:
-			tag_content = CSSSelector('.page_content_internal pre font')(page)[0]
+		if congress_session == '104':
+			tag_content = CSSSelector('.page_content_internal pre')(page)[0]
 			full_content = tag_content.text.strip()
+			page_lines = re.compile(r'\n').split(full_content)
 
-		page_lines = re.compile(r'\n').split(full_content)  
+			del page_lines[:51] #removes extra text within the <pre> tab that is unique to the 104th congress
+
+			page_lines.pop(0)
+			page_lines.pop(0)
+			page_lines.pop(0)
+
+			page_lines = [y + "     111" for y in page_lines] #half are 111, half are 112, fix that somehow?
+
+		else: 
+
+			if congress_session == '105':
+				tag_content = CSSSelector('.page_content_internal pre')(page)[0]
+				full_content = tag_content.text.strip()
+				page_lines = re.compile(r'\n').split(full_content)
+			
+				del page_lines[:50] #removes extra text within the <pre> tab that is unique to the 105th congress
+				if page_lines.count('') == 1:
+					page_lines.remove('') #removes single extra whitespace line that is unique to first year of 105th congress page
+
+			else:
+				tag_content = CSSSelector('.page_content_internal pre font')(page)[0]
+				full_content = tag_content.text.strip()
+				page_lines = re.compile(r'\n').split(full_content)  
+
+		print page_lines
 
 		page_lines.pop(0) #Remove superfluous first line of text.
 		statutes_volume_line = page_lines.pop(0) #Capture and remove second line of text (which contains Statutes at Large Volume)
@@ -132,6 +153,8 @@ if __name__ == "__main__":
 		lines += page_lines
 	lines_length = len(lines)
 
+
+
 	for line in lines:
 		parsed_line = parse_line(line)
 		if parsed_line:
@@ -143,7 +166,6 @@ if __name__ == "__main__":
 
 	print "There were %s items in this list." %lines_length 
 	print "There are %s items accounted for in the output." % len(listout)
-	print "There are %s additional description lines unaccounted for in this output." %additional_counter
 
 
 
@@ -151,4 +173,4 @@ if __name__ == "__main__":
 #TO DO:
 #create separate rows for multiple inset usc_section listings
 #add additional descriptions to previous dict
-#ffix the (very small number of) lines that aren't getting picked up
+#fix the (very small number of) lines that aren't getting picked up
