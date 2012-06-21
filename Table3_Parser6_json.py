@@ -12,25 +12,16 @@ from lxml.cssselect import CSSSelector
 import cStringIO as StringIO
 from sys import argv
 
-
-congress_session = argv[1]
-
 html_parser = etree.HTMLParser()
 
-url1 = "http://uscodebeta.house.gov/classification/tbl" + congress_session + "pl_1st.htm"
-url2 = "http://uscodebeta.house.gov/classification/tbl" + congress_session + "pl_2nd.htm"
+URLS = {
+	1 : "http://uscodebeta.house.gov/classification/tbl%spl_1st.htm",
+	2 : "http://uscodebeta.house.gov/classification/tbl%spl_2nd.htm"
+}
 
-connection1 = urllib2.urlopen(url1)
-page_content1 = connection1.read()
-page1 = etree.parse(StringIO.StringIO(page_content1), html_parser)
-tag_content1 = CSSSelector('.page_content_internal pre font')(page1)[0]
-full_content1 = tag_content1.text.strip()
-
-connection2 = urllib2.urlopen(url2)
-page_content2 = connection2.read()
-page2 = etree.parse(StringIO.StringIO(page_content2), html_parser)
-tag_content2 = CSSSelector('.page_content_internal pre font')(page2)[0]
-full_content2 = tag_content2.text.strip()
+URLS_104 = {
+	1 : "http://uscodebeta.house.gov/classification/tbl%spl_1st.htm"
+}
 
 
 ##PARSER
@@ -63,45 +54,19 @@ def classify(line):
     for type, expr in LINE_TYPES.items()])
 
 
-lines1 = re.compile(r'\n').split(full_content1)  
-
-lines1.pop(0) #Remove superfluous first line of text.
-statutes_volume_line1 = lines1.pop(0) #Capture and remove second line of text (which contains Statutes at Large Volume)
-lines1.pop(0) #Remove superfluous third line of text.
-
-a = re.search("(\d+)", statutes_volume_line1) 
-statutes_volume1 = a.group() #Saves Statutes at Large Volume for the first year of this congressional session.
-lines1 = [y + "     " + statutes_volume1 for y in lines1] #Adds Statutes at Large Volume to end of each string.
-
-lines2 = re.compile(r'\n').split(full_content2)
-
-lines2.pop(0) #Remove superfluous first line of text.
-statutes_volume_line2 = lines2.pop(0) #Capture and remove second line of text (which contains Statutes at Large Volume)
-lines2.pop(0) #Remove superfluous third line of text.
-
-b = re.search("(\d+)", statutes_volume_line2)
-statutes_volume2 = b.group() #Saves Statutes at Large Volume for the second year of this congressional session.
-lines2 = [x + "     " + statutes_volume2 for x in lines2] #Adds Statutes at Large Volume to end of each string.
-
-lines = lines1 + lines2 #Combine first and second years of congressional session.
-
-lines_length = len(lines)
-
-
-
 usc_title = None
 usc_section = None
 public_law_number = None
 public_law_section = None
 statutes_at_large_section = None
-counter = 0
 additional_counter = 0
 
-line_data = {}	
-listout = []	
+line_data = {}
+listout = []
 
-for line in lines:
-			
+HARD_CODED_LINES = json.load(open("hard_coded_lines.json"))
+
+def parse_line(line):
 	classified = classify(line)
 		
 	if classified['normal_line']:
@@ -127,37 +92,58 @@ for line in lines:
 		if ',' in line_data['public_law_section']: 
 			line_data['public_law_section'] = re.split(',', line_data['public_law_section'])
 
-
-
-		counter = counter + 1
-		listout.append(line_data)
-		
-	elif classified['additional_description_line']:
-			
-		f = re.match("(?P<additional_description>.*$)", line)
-			
-		line_data = f.groupdict()
-		line_data = {k: v.strip() for k, v in line_data.iteritems()} #removes whitespace		
-		#print line_data
-
-		#previous_line = listout.pop()
-		#print previous_line
-
-		#line_data = previous_line + line_data
-		#listout.append(line_data)
-
-		additional_counter = additional_counter + 1
+		return line_data
        
+	elif line in HARD_CODED_LINES:
+			return HARD_CODED_LINES[line]
+	
 	else:
-		print "This is a problem line...", line
+		return None
 
 
-jsonfile = json.dumps(listout, indent=5)
-print jsonfile
+if __name__ == "__main__":
+	congress_session = argv[1]
+	lines = []
 
-print "There were %s items in this list." %lines_length 
-print "There are %s items accounted for in the output." %counter
-print "There are %s additional description lines unaccounted for in this output." %additional_counter
+	urls = URLS_104 if congress_session == '104' else URLS
+
+	for page in sorted(urls.keys()):
+		connection = urllib2.urlopen(urls[page] % congress_session)
+		page_content = connection.read()
+		page = etree.parse(StringIO.StringIO(page_content), html_parser)
+
+		if congress_session == '105':
+			# do something totally different
+			pass
+		else:
+			tag_content = CSSSelector('.page_content_internal pre font')(page)[0]
+			full_content = tag_content.text.strip()
+
+		page_lines = re.compile(r'\n').split(full_content)  
+
+		page_lines.pop(0) #Remove superfluous first line of text.
+		statutes_volume_line = page_lines.pop(0) #Capture and remove second line of text (which contains Statutes at Large Volume)
+		page_lines.pop(0) #Remove superfluous third line of text.
+
+		a = re.search("(\d+)", statutes_volume_line) 
+		statutes_volume = a.group() #Saves Statutes at Large Volume for the first year of this congressional session.
+		page_lines = [y + "     " + statutes_volume for y in page_lines] #Adds Statutes at Large Volume to end of each string.
+
+		lines += page_lines
+	lines_length = len(lines)
+
+	for line in lines:
+		parsed_line = parse_line(line)
+		if parsed_line:
+			listout.append(parse_line(line))
+
+
+	jsonfile = json.dumps(listout, indent=5)
+	print jsonfile
+
+	print "There were %s items in this list." %lines_length 
+	print "There are %s items accounted for in the output." % len(listout)
+	print "There are %s additional description lines unaccounted for in this output." %additional_counter
 
 
 
