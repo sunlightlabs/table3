@@ -39,7 +39,7 @@ EXPRESSIONS = {
 	#public_law_section regex notes: The first option is in case of quotes, the second option is the norm, and the last option is in case it is empty.
 	'statutes_at_large_section': '[ ]+\d*A?[,-]?[ ]?\d*',
 	'statutes_at_large_volume': '\d{1,3}',    
-	'description': '(nt[\[\]a-zA-Z ]*)|(ed chg)|(prec[a-zA-Z ]*)|(new)|(gen amd)|(omitted)|(repealed)|(tr to [\w/-]*)|(tr fr [\w/-]*)|(to [:\w/-]*)|(fr [\w/-]*)|([\[\]\.a-zA-Z -]+)',
+	'description': '(nt[\[\]a-zA-Z ]*)|(R Plan \d, \d{4})|(ed chg)|(prec[a-zA-Z ]*)|(new)|(gen amd)|(omitted)|(repealed)|(tr to [\w/-]*)|(tr fr [\w/-]*)|(to [:\w/-]*)|(fr [\w/-]*)|([\[\]\.a-zA-Z -]+)',
 }
 	
 LINE_TYPES = {
@@ -54,6 +54,7 @@ public_law_section = None
 statutes_at_large_section = None
 
 line_data = {}
+ignored_lines = {}	
 listout = []
 
 HARD_CODED_LINES = json.load(open("hard_coded_lines.json"))
@@ -64,7 +65,6 @@ def classify(line):
         (type, expr.match(line))
     for type, expr in LINE_TYPES.items()])
 
-
 def parse_line(line):
 	classified = classify(line)
 		
@@ -73,13 +73,15 @@ def parse_line(line):
 		f = re.match(r"(?P<usc_title>{usc_title})[ ]*(?P<usc_section>{usc_section})[ ]+(?P<description>{description})[ ]*(?P<public_law_number>{public_law_number})[ ](?P<public_law_section>{public_law_section})[ ]*(?P<statutes_at_large_section>{statutes_at_large_section})[ ]+(?P<statutes_at_large_volume>{statutes_at_large_volume})".format(**EXPRESSIONS), line)
 
 		line_data = f.groupdict()
-
 		line_data = {k: v.strip() for k, v in line_data.iteritems()} #removes whitespace
-			
+		
 		if ',' in line_data['statutes_at_large_section']:
 			line_data['statutes_at_large_section'] = re.split(',', line_data['statutes_at_large_section'])
+		
+		if 'A-' in line_data['statutes_at_large_section']:
+			pass
 
-		if '-' in line_data['statutes_at_large_section']:
+		elif '-' in line_data['statutes_at_large_section']:
 			statutes_ends = []
 			statutes_ends = re.split('-', line_data['statutes_at_large_section'])
 				
@@ -88,11 +90,13 @@ def parse_line(line):
 
 			line_data['statutes_at_large_section'] = range(statutes_low, statutes_high + 1)
 
+
 		if ',' in line_data['public_law_section']: 
 			line_data['public_law_section'] = re.split(',', line_data['public_law_section'])
 
 		return line_data
        
+
 	elif line in HARD_CODED_LINES:
 			return HARD_CODED_LINES[line]
 
@@ -116,13 +120,11 @@ if __name__ == "__main__":
 			full_content = tag_content.text.strip()
 			page_lines = re.compile(r'\n').split(full_content)
 
-			del page_lines[:51] #removes extra text within the <pre> tab that is unique to the 104th congress
+			del page_lines[:54] #removes extra text within the <pre> tab that is unique to the 104th congress
 
-			page_lines.pop(0)
-			page_lines.pop(0)
-			page_lines.pop(0)
-
-			page_lines = [y + "     111" for y in page_lines] #half are 111, half are 112, fix that somehow?
+			while page_lines.count('') > 0:
+				page_lines.remove('') #removes empty lines specific to the 104th congress
+			page_lines = [y + "     109" for y in page_lines[:1511]] + [y + "     110" for y in page_lines[1511:]] #correctly attributes statutes volume to 104th congress
 
 		else: 
 
@@ -138,17 +140,15 @@ if __name__ == "__main__":
 			else:
 				tag_content = CSSSelector('.page_content_internal pre font')(page)[0]
 				full_content = tag_content.text.strip()
-				page_lines = re.compile(r'\n').split(full_content)  
+				page_lines = re.compile(r'\n').split(full_content)
 
-		print page_lines
+			page_lines.pop(0) #Remove superfluous first line of text.
+			statutes_volume_line = page_lines.pop(0) #Capture and remove second line of text (which contains Statutes at Large Volume)
+			page_lines.pop(0) #Remove superfluous third line of text.
 
-		page_lines.pop(0) #Remove superfluous first line of text.
-		statutes_volume_line = page_lines.pop(0) #Capture and remove second line of text (which contains Statutes at Large Volume)
-		page_lines.pop(0) #Remove superfluous third line of text.
-
-		a = re.search("(\d+)", statutes_volume_line) 
-		statutes_volume = a.group() #Saves Statutes at Large Volume for the first year of this congressional session.
-		page_lines = [y + "     " + statutes_volume for y in page_lines] #Adds Statutes at Large Volume to end of each string.
+			a = re.search("(\d+)", statutes_volume_line) 
+			statutes_volume = a.group() #Saves Statutes at Large Volume for the first year of this congressional session.
+			page_lines = [y + "     " + statutes_volume for y in page_lines] #Adds Statutes at Large Volume to end of each string.
 
 		lines += page_lines
 	lines_length = len(lines)
@@ -173,4 +173,3 @@ if __name__ == "__main__":
 #TO DO:
 #create separate rows for multiple inset usc_section listings
 #add additional descriptions to previous dict
-#fix the (very small number of) lines that aren't getting picked up
