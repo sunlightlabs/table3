@@ -474,6 +474,375 @@
         "public_law_section": "1704(c)",
         "usc_section": "301(a)", 
         "usc_title": "37"
+        },
+
+
+    "5A                 R Plan 7, 1961   105-258  202                      1915           112" :
+        {
+        "statutes_at_large_section": "1915",
+        "description": "R Plan 7, 1961", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-258", 
+        "public_law_section": "202",
+        "usc_section": "", 
+        "usc_title": "5A"
+        },
+
+
+    "7     1922                          105-277  101(a) [804, 805(1)]     2681-39        112" :
+        {
+        "statutes_at_large_section": "2681-39",
+        "description": "", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(a) [804, 805(1)]",
+        "usc_section": "1922", 
+        "usc_title": "7"
+        },
+
+
+    "7     2001                          105-277  101(a) [807, 808]        2681-40        112" :
+        {
+        "statutes_at_large_section": "2681-40",
+        "description": "", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(a) [807, 808]",
+        "usc_section": "2001", 
+        "usc_title": "7"
+        },
+
+
+    "18    923                           105-277  101(b) [119(b), (c)]     2681-69        112" :
+        {
+        "statutes_at_large_section": "2681-69",
+        "description": "", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(b) [119(b), (c)]",
+        "usc_section": "923", 
+        "usc_title": "18"
+        },
+
+
+    "16    2104         nt new           105-277  101(e) [401, 402]        2681-305 to 2681-310     112" :
+        {
+        "statutes_at_large_section": [
+            "2681-305",
+            "2681-306",
+            "2681-307",
+            "2681-308",
+            "2681-309",
+            "2681-310"
+        ],
+        "description": "nt new", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(e) [401, 402]",
+        "usc_section": "2104", 
+        "usc_title": "16"
+        },
+
+
+    "20    6362                          105-277  101(f) [201, 202]        2681-407, 2681-408     112" :
+        {
+        "statutes_at_large_section": [
+            "2681-407",
+            "2681-408"
+        ],
+        "description": "nt new", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(f) [201, 202]",
+        "usc_section": "6362", 
+        "usc_title": "20"
+        },
+
+
+    "29    2915                          105-277  101(f) [401(9), (10)]    2681-411       112" :
+        {
+        "statutes_at_large_section": "2681-411",
+        "description": "", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(f) [401(9), (10)]",
+        "usc_section": "2915", 
+        "usc_title": "29"
+        },
+
+
+    "29    1721         nts              105-277  101(f) [405(d)(24), (25)]2681-423       112" :
+        {
+        "statutes_at_large_section": "2681-423",
+        "description": "nts", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(f) [405(d)(24), (25)]",
+        "usc_section": "1721", 
+        "usc_title": "29"
+        },
+
+
+    "29    1721         nts              105-277  101(f) [405(f)(16), (17)]2681-432       112" :
+        {
+        "statutes_at_large_section": "2681-432",
+        "description": "nts", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(f) [405(f)(16), (17)]",
+        "usc_section": "1721", 
+        "usc_title": "29"
+        },
+
+
+    "43    1653         nt new           105-277  101(g) [329(a), (b)]     2681-470       112" :
+        {
+        "statutes_at_large_section": "2681-470",
+        "description": "nt new", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(g) [329(a), (b)]",
+        "usc_section": "1653", 
+        "usc_title": "43"
+        },
+
+
+    "23    502          nts              105-277  101(g) [369, 370]        2681-478       112":
+        {
+        "statutes_at_large_section": "2681-478",
+        "description": "nts", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(g) [369, 370]",
+        "usc_section": "502", 
+        "usc_title": "23"
+        },
+
+
+    "5     4507                          105-277  101(h) [631(a), (b)]     2681-523       112":
+        {
+        "statutes_at_large_section": "2681-523",
+        "description": "", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "101(h) [631(a), (b)]",
+        "usc_section": "4507", 
+        "usc_title": "5"
+        },
+
+
+    "5A                 R Plan 2, 1977   105-277  1334(b)                  2681-786       112":
+        {
+        "statutes_at_large_section": "2681-786",
+        "description": "R Plan 2, 1977", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "1334(b)",
+        "usc_section": "", 
+        "usc_title": "5A"
+        },
+
+
+    "5A                 R Plan 2, 1977   105-277  1336(6)                  2681-790       112":
+        {
+        "statutes_at_large_section": "2681-790",
+        "description": "R Plan 2, 1977", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "1336(6)",
+        "usc_section": "", 
+        "usc_title": "5A"
+        },       
+
+
+    "5A                 R Plan 2,1979rep 105-277  1422(a)(1)               2681-792       112":
+        {
+        "statutes_at_large_section": "2681-792",
+        "description": "R Plan 2,1979rep", 
+        "statutes_at_large_volume": "112", 
+        "public_law_number": "105-277", 
+        "public_law_section": "1422(a)(1)",
+        "usc_section": "", 
+        "usc_title": "5A"
+        },
+
+
+    "10    5721                                104-106  508(a), (b), (d)  296, 297     110":
+        {
+        "statutes_at_large_section": [
+            "296", 
+            "297"
+            ],
+        "description": "", 
+        "statutes_at_large_volume": "110", 
+        "public_law_number": "104-106", 
+        "public_law_section": [
+            "508(a)",
+            "508(b",
+            "508(d)"
+            ],
+        "usc_section": "5721", 
+        "usc_title": "10"
+        },
+
+
+    "48    1574                          106-84   1(a), (b)(1), (2)        1295           113":
+        {
+        "statutes_at_large_section": [
+            "296", 
+            "297"
+            ],
+        "description": "", 
+        "statutes_at_large_volume": "113", 
+        "public_law_number": "106-84", 
+        "public_law_section": [
+            "1(a)",
+            "1(b)(1)",
+            "1(b)(2)"
+            ],
+        "usc_section": "1574", 
+        "usc_title": "48"
+        },
+
+
+    "22    2656         nt new           106-113  1000(a)(2)[566(e), (g), (j), (k)]1501A-107 to 1501A-109     113":
+        {
+        "statutes_at_large_volume": [
+            "1501A-107", 
+            "1501A-108",
+            "1501A-109"
+            ],
+        "description": "nt new", 
+        "public_law_number": "106-113", 
+        "public_law_section": [
+            "1000(a)(2)[566(e)",
+            "1000(a)(2)[566(g)",
+            "1000(a)(2)[566(j)",
+            "1000(a)(2)[566(k)"
+            ],
+        "usc_section": "2656", 
+        "usc_title": "22"
+        },
+
+
+    "22    2656         nt new           106-113  1000(a)(2)[566(e), (g), (j), (k)]1501A-107 to 1501A-109     113":
+        {
+        "statutes_at_large_volume": [
+            "1501A-107", 
+            "1501A-108",
+            "1501A-109"
+            ],
+        "description": "nt new", 
+        "public_law_number": "106-113", 
+        "public_law_section": [
+            "1000(a)(2)[566(e)]",
+            "1000(a)(2)[566(g)]",
+            "1000(a)(2)[566(j)]",
+            "1000(a)(2)[566(k)]"
+            ],
+        "usc_section": "2656", 
+        "usc_title": "22"
+        },
+
+
+    "42    603                           106-113  1000(a)(4)[805(a)(2), (b), 806]1501A-285, 1501-286     113":
+        {
+        "statutes_at_large_volume": [
+            "1501A-285", 
+            "1501-286"
+            ],
+        "description": "", 
+        "public_law_number": "106-113", 
+        "public_law_section": [
+            "1000(a)(4)[805(a)(2)]",
+            "1000(a)(4)[805(b)]",
+            "1000(a)(2)[806]"
+            ],
+        "usc_section": "603", 
+        "usc_title": "42"
+        },
+
+    "42    1395w-4                       106-113  1000(a)(6)[211(a)(1), (2)(A)]1501A-345 to 1501A-347     113":
+        {
+        "statutes_at_large_volume": [
+            "1501A-345", 
+            "1501A-346",
+            "1501A-347"
+            ],
+        "description": "", 
+        "public_law_number": "106-113", 
+        "public_law_section": [
+            "1000(a)(6)[211(a)(1)",
+            "1000(a)(6)[211(a)(2)(A)"
+            ],
+        "usc_section": "1395w-4", 
+        "usc_title": "42"
+        },
+
+
+    "5A                 R Plan 2, 1977   106-113  1000(a)(7)[404(a)]       1501A-446      113":
+        {
+        "statutes_at_large_volume": "1501A-446",
+        "description": "R Plan 2, 1977", 
+        "public_law_number": "106-113", 
+        "public_law_section":  "1000(a)(7)[404(a)]",
+        "usc_section": "", 
+        "usc_title": "5A"
+        },
+
+    "5A                 R Plan 2, 1977   106-113  1000(a)(7)[404(c)(1)]    1501A-447      113":
+        {
+        "statutes_at_large_volume": "1501A-447",
+        "description": "R Plan 2, 1977", 
+        "public_law_number": "106-113", 
+        "public_law_section":  "1000(a)(7)[404(c)(1)]",
+        "usc_section": "", 
+        "usc_title": "5A"
+        },
+
+    "5A                 R Plan 2, 1977   106-113  1000(a)(7)[404(c)(2)]    1501A-447      113":
+        {
+        "statutes_at_large_volume": "1501A-447",
+        "description": "R Plan 2, 1977", 
+        "public_law_number": "106-113", 
+        "public_law_section":  "1000(a)(7)[404(c)(2)]",
+        "usc_section": "", 
+        "usc_title": "5A"
+        },
+
+    "35    119                           106-113  1000(a)(9)[4801(b), (c)] 1501A-588, 1501A-589     113":
+        {
+        "statutes_at_large_volume": [
+            "1501A-588",
+            "1501A-589"
+            ],
+        "description": "R Plan 2, 1977", 
+        "public_law_number": "106-113", 
+        "public_law_section":  [
+            "1000(a)(9)[4801(b)]",
+            "1000(a)(9)[4801(c)]"
+            ],
+        "usc_section": "119", 
+        "usc_title": "35"
+        },
+
+    "47    231          nt               106-113  1000(a)(9)[5001(b)-(f)]  1501A-591, 1501A-592     113":
+        {
+        "statutes_at_large_volume": [
+            "1501A-591",
+            "1501A-592"
+            ],
+        "description": "nt", 
+        "public_law_number": "106-113", 
+        "public_law_section":  [
+            "1000(a)(9)[5001(b)]",
+            "1000(a)(9)[5001(c)]",
+            "1000(a)(9)[5001(d)]",
+            "1000(a)(9)[5001(e)]",
+            "1000(a)(9)[5001(f)]"
+            ],
+        "usc_section": "231", 
+        "usc_title": "47"
         }
 
 }
