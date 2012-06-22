@@ -65,6 +65,33 @@ def classify(line):
         (type, expr.match(line))
     for type, expr in LINE_TYPES.items()])
 
+
+def splitter(line_data):
+
+ 	if ',' in line_data['statutes_at_large_section']:
+ 		line_data['statutes_at_large_section'] = re.split(',', line_data['statutes_at_large_section'])
+
+	if 'A-' in line_data['statutes_at_large_section']:
+		pass
+
+	elif '-' in line_data['statutes_at_large_section']:
+ 		statutes_ends = []
+ 		statutes_ends = re.split('-', line_data['statutes_at_large_section'])
+				
+ 		statutes_high = int(statutes_ends.pop())
+ 		statutes_low = int(statutes_ends.pop())
+
+ 		line_data['statutes_at_large_section'] = range(statutes_low, statutes_high + 1)
+
+	if ',' in line_data['public_law_section']: 
+		line_data['public_law_section'] = re.split(',', line_data['public_law_section'])	
+
+	#if '-' in line_data['public_law_section']:
+
+
+	return line_data
+
+
 def parse_line(line):
 	classified = classify(line)
 		
@@ -74,28 +101,9 @@ def parse_line(line):
 
 		line_data = f.groupdict()
 		line_data = {k: v.strip() for k, v in line_data.iteritems()} #removes whitespace
-		
-		if ',' in line_data['statutes_at_large_section']:
-			line_data['statutes_at_large_section'] = re.split(',', line_data['statutes_at_large_section'])
-		
-		if 'A-' in line_data['statutes_at_large_section']:
-			pass
 
-		elif '-' in line_data['statutes_at_large_section']:
-			statutes_ends = []
-			statutes_ends = re.split('-', line_data['statutes_at_large_section'])
-				
-			statutes_high = int(statutes_ends.pop())
-			statutes_low = int(statutes_ends.pop())
-
-			line_data['statutes_at_large_section'] = range(statutes_low, statutes_high + 1)
-
-
-		if ',' in line_data['public_law_section']: 
-			line_data['public_law_section'] = re.split(',', line_data['public_law_section'])
-
+		line_data = splitter(line_data)
 		return line_data
-       
 
 	elif line in HARD_CODED_LINES:
 			return HARD_CODED_LINES[line]
