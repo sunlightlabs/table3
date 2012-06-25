@@ -68,33 +68,140 @@ def classify(line):
 
 def splitter(line_data):
 
+ ##split multiple statutes at large sections
  	if ',' in line_data['statutes_at_large_section']:
  		line_data['statutes_at_large_section'] = re.split(',', line_data['statutes_at_large_section'])
+ 		#next three lines just remove whitespace created by split
+ 		first_statute_section = line_data['statutes_at_large_section'].pop(0).strip()
+ 		second_statute_section = line_data['statutes_at_large_section'].pop(0).strip()
+ 		line_data['statutes_at_large_section'] = [first_statute_section, second_statute_section]
 
-	if 'A-' in line_data['statutes_at_large_section']:
+	elif 'A-' in line_data['statutes_at_large_section']:
 		pass
 
 	elif '-' in line_data['statutes_at_large_section']:
  		statutes_ends = []
  		statutes_ends = re.split('-', line_data['statutes_at_large_section'])
 				
- 		statutes_high = int(statutes_ends.pop())
- 		statutes_low = int(statutes_ends.pop())
+ 		statutes_low = int(statutes_ends.pop(0))
+ 		statutes_high = int(statutes_ends.pop(0))
 
  		line_data['statutes_at_large_section'] = range(statutes_low, statutes_high + 1)
 
-	if ',' in line_data['public_law_section']: 
+
+ ##split multiple public law sections, ignores public law sections that have quotes, brackets, or commas in addition to hyphens
+ 	if '-' in line_data['public_law_section'] and any([symbol in line_data['public_law_section'] for symbol in [',', '[','"']]):
+ 		print "Good Grief, What is this?"
+
+ 	if '-' in line_data['public_law_section'] and not any([symbol in line_data['public_law_section'] for symbol in [',', '[','"']]): 
+ 		print line
+ 		plsection_ends = []
+ 		plsection_ends = re.split('-', line_data['public_law_section'])
+
+ 		plsection_low = plsection_ends.pop(0)
+ 		plsection_high = plsection_ends.pop(0)
+		
+		print "There is a hyphen here!!!"
+
+		if re.match(r"\d+$", plsection_low) is not None and re.match(r"\s?\d+$", plsection_high) is not None:
+			#for all numeric ranges of public section numbers e.g. 6-15
+			print "But we accounted for this hyphen, right?"
+			plsection_low = int(plsection_low)
+			plsection_high = int(plsection_high)
+			line_data['public_law_section'] = range(plsection_low, plsection_high + 1)
+
+		elif re.match(r"\d+$", plsection_low) is not None and re.match(r"\d+\(?[A-Za-z]\)?$", plsection_high) is not None:
+			#for all numeric ranges of public section number that end with a single alphabetic subsection letter e.g. 101-103(b) or 2-6A
+			print "But we accounted for this hyphen, right?"
+			
+			plsection_low = int(plsection_low)
+			plsection_top = int(re.search(r"\d+", plsection_high).group())
+			plsection_range = range(plsection_low, plsection_top)
+
+			plsection_range.append(plsection_high)
+			line_data['public_law_section'] = plsection_range
+
+		elif re.match(r"\d+\([a-z]\)", plsection_low) is not None and re.match(r"\([a-z]\)", plsection_high) is not None:
+			#for ranges of lowercase lettered subsections within one numbered section e.g. 2(a)-(f)
+			print "But we accounted for this hyphen, right?"
+			section_base = re.match(r".*(?=\([a-z]\))", plsection_low).group()
+
+			letter_low = re.search(r"[a-z]", plsection_low).group()
+			letter_high = re.search(r"[a-z]", plsection_high).group()
+
+			letter_range_without_high = [chr(x) for x in range(ord(letter_low), ord(letter_high))]
+			
+			section_range = [section_base + '(' + k + ')' for k in letter_range_without_high]
+		
+			plsection_high = section_base + plsection_high
+	
+			section_range.append(plsection_high)
+			line_data['public_law_section'] = section_range
+
+		elif re.match(r"\d+\([a-z]\)\(\d\)", plsection_low) is not None and re.match(r"\(\d+\)", plsection_high) is not None:
+			#for ranges of numbered subsections within a single lettered section within a single larger numbered section e.g. 42(b)(4)-(7)
+			print "But we accounted for this hyphen, right?"
+			section_base = re.match(r".*(?=\(\d\))", plsection_low).group()
+			
+			plsection_low = int(re.search(r"\d+(?=\))", plsection_low).group())
+			plsection_high = int(re.search(r"\d+", plsection_high).group())
+
+			plsection_range = range(plsection_low, plsection_high +1)
+
+			public_law_section_list = [section_base + '(' + str(l) + ')' for l in plsection_range]
+			line_data['public_law_section'] = public_law_section_list
+
+
+		elif re.match(r"\d+\([a-z]\)\(\d\)\([A-Z]", plsection_low) is not None and re.match(r"\([A-Z]+\)", plsection_high) is not None:
+			#for ranges of capitalized lettered subsections within a single numbered subsection within a single lowercase>> 
+			#lettered section within a single larger numbered section e.g. 221(c)(1)(B)-(D)
+			print "But we accounted for this hyphen, right?"
+			section_base = re.match(r".*(?=\([A-Z]\))", plsection_low).group()
+
+			letter_low = re.search(r"[A-Z]", plsection_low).group()
+			letter_high = re.search(r"[A-Z]", plsection_high).group()			
+			letter_range_without_high = [chr(x) for x in range(ord(letter_low), ord(letter_high))]
+
+			section_range = [section_base + '(' + k + ')' for k in letter_range_without_high]
+			plsection_high = section_base + plsection_high
+
+			section_range.append(plsection_high)
+			line_data['public_law_section'] = section_range
+
+
+		else: 
+			line_data['public_law_section'] = re.split('-', line_data['public_law_section'])
+
+
+
+	elif ',' in line_data['public_law_section']: 
 		line_data['public_law_section'] = re.split(',', line_data['public_law_section'])	
+		
+		first_entry = line_data['public_law_section'].pop(0).strip()
+		second_entry = line_data['public_law_section'].pop(0).strip()
 
-	#if '-' in line_data['public_law_section']:
+		if re.match(r"\(\d+\)", second_entry) is not None:
+			section_base = re.match(r".*(?=\(\d+\))", first_entry).group()
+			second_entry = section_base + second_entry
 
+		elif re.match(r"\([a-z]\)", second_entry) is not None:
+			section_base = re.match(r".*(?=\([a-z]\))", first_entry).group()
+			second_entry = section_base + second_entry
 
+		elif re.match(r"\([A-Z]\)", second_entry) is not None:
+			section_base = re.match(r".*(?=\([A-Z]\))", first_entry).group()
+			second_entry = section_base + second_entry
+
+		line_data['public_law_section'] = [first_entry, second_entry]
+
+	print line_data
 	return line_data
+
 
 
 def parse_line(line):
 	classified = classify(line)
-		
+	
 	if classified['normal_line']:
 
 		f = re.match(r"(?P<usc_title>{usc_title})[ ]*(?P<usc_section>{usc_section})[ ]+(?P<description>{description})[ ]*(?P<public_law_number>{public_law_number})[ ](?P<public_law_section>{public_law_section})[ ]*(?P<statutes_at_large_section>{statutes_at_large_section})[ ]+(?P<statutes_at_large_volume>{statutes_at_large_volume})".format(**EXPRESSIONS), line)
@@ -166,11 +273,11 @@ if __name__ == "__main__":
 	for line in lines:
 		parsed_line = parse_line(line)
 		if parsed_line:
-			listout.append(parse_line(line))
+			listout.append(parsed_line)
 
 
 	jsonfile = json.dumps(listout, indent=5)
-	print jsonfile
+	#print jsonfile
 
 	print "There were %s items in this list." %lines_length 
 	print "There are %s items accounted for in the output." % len(listout)
@@ -180,4 +287,4 @@ if __name__ == "__main__":
 
 #TO DO:
 #create separate rows for multiple inset usc_section listings
-#add additional descriptions to previous dict
+#account for more than one comma in public section numbers
